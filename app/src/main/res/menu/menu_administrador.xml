@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/itemadmOpc1"
+        android:title="Alta"
+        android:icon="@mipmap/clientes"
+        app:showAsAction="always"
+        ></item>
+    <item
+        android:id="@+id/itemadmOpc2"
+        android:title="Alta"
+        android:icon="@mipmap/producto"
+        app:showAsAction="always"
+        ></item>
+    <item
+        android:id="@+id/itemadmOpc3"
+        android:title="Alta"
+        android:icon="@mipmap/categorias"
+        app:showAsAction="always"
+        ></item>
+    <item
+        android:id="@+id/itemadmOpc4"
+        android:title="Alta"
+        android:icon="@mipmap/ordenes"
+        app:showAsAction="always"
+        ></item>
+    <item
+        android:id="@+id/itemadmOpc5"
+        android:title="cupones"
+        android:icon="@mipmap/cupon"
+        app:showAsAction="always"
+        ></item>
+    <item
+        android:id="@+id/itemadmOpc6"
+        android:title="reportes"
+        android:icon="@mipmap/reporte"
+        app:showAsAction="always"
+        ></item>
+    <item
+        android:id="@+id/itemadmOpc7"
+        android:title="logout"
+        android:icon="@mipmap/salida"
+        app:showAsAction="always"
+        ></item>
+
+</menu>

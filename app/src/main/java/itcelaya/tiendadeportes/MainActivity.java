@@ -22,13 +22,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.itemInOpc1:
-                Intent login = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(login);
+                Intent compra = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(compra);
                 //this.finish();
                 break;
             case R.id.itemInOpc2:
-                Intent compras = new Intent(getApplicationContext(), ComprasActivity.class);
-                startActivity(compras);
+                Intent login = new Intent(getApplicationContext(), ComprasActivity.class);
+                startActivity(login);
                 //this.finish();
                 break;
 

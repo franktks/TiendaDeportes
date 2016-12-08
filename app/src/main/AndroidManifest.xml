@@ -19,7 +19,14 @@
         <activity android:name=".ClienteActivity" />
         <activity android:name=".AdminActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".ComprasActivity"></activity>
+        <activity android:name=".ComprasActivity" />
+        <activity android:name=".HistorialActivity" />
+        <activity android:name=".ReportesActivity" />
+        <activity android:name=".AltaCuponActivity" />
+        <activity android:name=".OrdersActivity" />
+        <activity android:name=".CategoriasActivity" />
+        <activity android:name=".ProductosActivity" />
+        <activity android:name=".ClientesActivity"></activity>
     </application>
 
 </manifest>

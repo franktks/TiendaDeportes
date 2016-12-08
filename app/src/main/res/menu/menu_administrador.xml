@@ -19,6 +19,7 @@
         android:icon="@mipmap/categorias"
         app:showAsAction="always"
         ></item>
+
     <item
         android:id="@+id/itemadmOpc4"
         android:title="Alta"

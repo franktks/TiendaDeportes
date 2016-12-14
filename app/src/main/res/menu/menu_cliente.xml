@@ -3,18 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/itmCliOpc1"
-        android:title="Carrito"
+        android:title="Editar"
         android:icon="@mipmap/carro"
         app:showAsAction="always"
         ></item>
     <item
         android:id="@+id/itmCliOpc2"
-        android:title="Gistorial"
+        android:title="Eliminar"
         android:icon="@mipmap/historial"
         app:showAsAction="always"
         ></item>
     <item
         android:id="@+id/itmCliOpc3"
+        android:title="Logout"
+        android:icon="@mipmap/clientes"
+        app:showAsAction="always"
+        ></item>
+    <item
+        android:id="@+id/itmCliOpc4"
         android:title="Logout"
         android:icon="@mipmap/salida"
         app:showAsAction="always"

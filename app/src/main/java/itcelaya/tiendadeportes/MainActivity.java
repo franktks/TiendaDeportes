@@ -2,12 +2,14 @@ package itcelaya.tiendadeportes;
 
 
 import android.app.Dialog;
-import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,210 +18,157 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import itcelaya.tiendadeportes.model.Address;
+import itcelaya.tiendadeportes.ProductsAdapter;
 import itcelaya.tiendadeportes.model.Customer;
-import itcelaya.tiendadeportes.task.AsyncResponse;
-import itcelaya.tiendadeportes.task.LoginTask;
-import itcelaya.tiendadeportes.task.WooCommerceTask;
 import itcelaya.tiendadeportes.utils.NukeSSLCerts;
+import itcelaya.tiendadeportes.task.LoadProductsTask;
+import itcelaya.tiendadeportes.model.Products;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+/**
+ * Created by anton on 05/06/2016.
+ */
+public class MainActivity extends AppCompatActivity {
 
-    ListView list;
-    TextView txtuser;
-    List<Customer> items   = new ArrayList<Customer>();
-    public static String consumer_key    = "ck_a65d32cc7da4f54f71287a832336426a52161e50";
-    public static String consumer_secret = "cs_cd1286641771420e8e1caf698da797f7ae8bb19b";
-    //public static String url = "https://192.168.56.1/~niluxer/wordpress/wc-api/v3/customers";
-    public static String url = "https://192.168.1.75/store_itc/wc-api/v3/customers";
-    //String auth_url = "https://192.168.56.1/~niluxer/wordpress/auth_users.php";
-    String auth_url = "https://192.168.1.75/store_itc/auth_users.php";
-    String jsonResult, loginResult;
+    String ip = "192.168.0.23";
+    BDTienda objcreate;
+    SQLiteDatabase objexecute;
+    ListView listProducts;
 
-    Dialog dLogin;
-    CustomerAdapter cAdapter;
+    List<Products> items = new ArrayList<Products>();
 
+    public static String consumer_key = "ck_9504739e63fdbdefa492559699298c92b10237ed";
+    public static String consumer_secret = "cs_b374d814c0b933e991812a107fe184de7fd94db3";
 
-    Button btnAceptar, btnCancelar;
-    EditText txtUsername, txtPassword;
-
+    String url = "https://192.168.0.23/DeportesITC/wc-api/v3/products";
+    String jsonResult;
+    String user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ActionBar actionBar= getSupportActionBar();
+        //actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(Html.fromHtml("<font color='#fffcfc'>Añadir Producto</font>"));
+        listProducts = (ListView) findViewById(R.id.listPro);
+        listProducts.setOnItemClickListener(listenerOrdenes);
+        objcreate= new BDTienda(this,"DESPENSA",null,1);
+        objexecute = objcreate.getWritableDatabase();
+        Bundle extras = getIntent().getExtras();
+        user= extras.getString("user");
+
         NukeSSLCerts.nuke();
 
-
-        mostrarLogin();
-
-        list = (ListView) findViewById(R.id.listCustomers);
-        //list = getListView();
-        list.setOnItemClickListener(listenerOrdenes);
-        registerForContextMenu(list);
-
+        loadProducts();
     }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_invitado, menu);
-        return true;
+        getMenuInflater().inflate(R.menu.menu_invitado,menu);
+        return super.onCreateOptionsMenu(menu);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.itemInOpc1:
-                Intent ialta = new Intent(getApplicationContext(), ComprasActivity.class);
-                startActivity(ialta);
-                this.finish();
+                String c="";
+                Intent carrito = new Intent(getApplicationContext(), ComprasActivity.class);
+                carrito.putExtra("id_producto",c);
+                carrito.putExtra("user",user);
+                startActivity(carrito);
                 break;
             case R.id.itemInOpc2:
+                eliminarNegocio();
                 Intent login = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(login);
-                this.finish();
                 break;
+
+
 
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-    //@Override
-    //public boolean onOptionsItemSelected(MenuItem item) {
-        //int id = item.getItemId();
-        //Boolean bandera = true;
-
-      //  switch (id) {
-          /*  case R.id.mnuNew:
-                newCustomer();
-                break;
-
-            default:
-                bandera = super.onOptionsItemSelected(item);
-        }
-        return bandera;*/
-    //    }
-  //  }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-
-        if (v.getId() == R.id.listCustomers) {
-            menu.setHeaderTitle("Opciones");
-            MenuInflater inflater=getMenuInflater();
-            inflater.inflate(R.menu.menu_cliente, menu);
-
+    public void eliminarNegocio(){
+        try{
+            String query="DELETE from productos";
+            objexecute.execSQL("PRAGMA foreign_keys=ON;");
+            objexecute.execSQL(query);
+            objexecute.execSQL("PRAGMA foreign_keys=OFF;");
+            Toast.makeText(this,"Orden Enviada",Toast.LENGTH_LONG).show();
+            Intent tienda =new Intent(this,MainActivity.class);
+            startActivity(tienda);
+            this.finish();
+        }catch (Exception e){
+            Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();
         }
     }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        //return super.onContextItemSelected(item);
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Adapter adapter = list.getAdapter();
-        //Object obj  = adapter.getItem(info.position);
-        Customer customer  = (Customer) adapter.getItem(info.position);
-        txtuser = (TextView) dLogin.findViewById(R.id.user);
-
-
-        switch (item.getItemId()) {
-            case R.id.itmCliOpc1:
-                //Toast.makeText(MainActivity.this, "Edit" + customer.getLast_name(), Toast.LENGTH_SHORT).show();
-                editCustomer(customer.getId());
-
-                break;
-            case R.id.itmCliOpc2:
-                //Toast.makeText(MainActivity.this, "Delete" + customer.getLast_name(), Toast.LENGTH_SHORT).show();
-                deleteCustomer(customer.getId());
-
-                break;
+    AdapterView.OnItemClickListener listenerOrdenes = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            //Toast.makeText(MainActivity.this, view.getTag() + "", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(MainActivity.this, ComprasActivity.class);
+            Products o = items.get(i);
+            //Toast.makeText(getBaseContext(),"Holi", Toast.LENGTH_SHORT).show();
+            intent.putExtra("id_producto", view.getTag().toString());
+            intent.putExtra("user",user);
+            startActivity(intent);
         }
-        return true;
+    };
+       public void probar(){
+        Toast.makeText(this, "probar", Toast.LENGTH_LONG).show();
     }
-
-    public void loadSales() {
-//String url_sales = "https://192.168.56.1/~niluxer/wordpress/wc-api/v3/reports/sales?filter[date_min]=2016-11-23&filter[date_max]=2016-12-05";
-        String url_sales = "https://192.168.1.75/store_itc/wc-api/v3/reports/sales?filter[period]=year";
-
-        WooCommerceTask tarea = new WooCommerceTask(this, WooCommerceTask.GET_TASK, "Cargando Reporte...", new AsyncResponse() {
-            @Override
-            public void setResponse(String output) {
-                jsonResult = output;
-               // Intent intent_grafica = new Intent(MainActivity.this, Grafica1Activity.class);
-                //intent_grafica.putExtra("json", jsonResult);
-                //startActivity(intent_grafica);
-            }
-        });
-
-        tarea.execute(new String[] { url_sales });
+    private void loadProducts(String id_pro) {
+        LoadProductsTask tarea = new LoadProductsTask(this, consumer_key, consumer_secret);
+        try {
+            jsonResult = tarea.execute(new String[] { url+"/"+id_pro }).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        //Toast.makeText(getBaseContext(), jsonResult, Toast.LENGTH_LONG).show();
+        ListProductos();
 
     }
 
-
-    private void mostrarLogin() {
-        dLogin = new Dialog(this);
-        dLogin.setTitle("Login");
-        dLogin.setContentView(R.layout.login);
-
-        txtUsername = (EditText) dLogin.findViewById(R.id.txtUsername);
-
-        txtPassword = (EditText) dLogin.findViewById(R.id.txtPassword);
-        btnAceptar = (Button) dLogin.findViewById(R.id.btnAceptar);
-        btnCancelar = (Button) dLogin.findViewById(R.id.btnCancelar);
-        btnAceptar.setOnClickListener(this);
-        btnCancelar.setOnClickListener(this);
-        dLogin.show();
-    }
-
-    public void loadCustomers() {
-        WooCommerceTask tarea = new WooCommerceTask(this, WooCommerceTask.GET_TASK, "Cargando Clientes...", new AsyncResponse() {
-            @Override
-            public void setResponse(String output) {
-                jsonResult = output;
-                ListCustomers();
-            }
-        });
-        tarea.execute(new String[] { url });
+    private void loadProducts() {
+        LoadProductsTask tarea = new LoadProductsTask(this, consumer_key, consumer_secret);
+        try {
+            jsonResult = tarea.execute(new String[] { url }).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        //Toast.makeText(getBaseContext(), jsonResult, Toast.LENGTH_LONG).show();
+        ListProductos();
 
     }
 
-    public void ListCustomers() {
+    public void ListProductos() {
 
         try {
+            //lbl1.setText(jsonResult);
             JSONObject jsonResponse = new JSONObject(jsonResult);
-            JSONArray jsonMainNode = jsonResponse.optJSONArray("customers");
+            JSONArray jsonMainNode = jsonResponse.optJSONArray("products");
 
             for (int i = 0; i < jsonMainNode.length(); i++) {
                 JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
+                String name = jsonChildNode.optString("title");
+                String type = jsonChildNode.optString("type");
+                Integer id_product = jsonChildNode.optInt("id");
+                Double price = jsonChildNode.optDouble("regular_price");
+                String ImageURL = jsonChildNode.optString("featured_src");
 
-                JSONObject jsonChildNodeBillingAddress = jsonChildNode.getJSONObject("billing_address");
-                Address billingAddress = new Address(jsonChildNodeBillingAddress.getString("first_name"), jsonChildNodeBillingAddress.getString("last_name"));
-                JSONObject jsonChildNodeShippingAddress = jsonChildNode.getJSONObject("shipping_address");
-                Address shippingAddress = new Address(jsonChildNodeShippingAddress.getString("first_name"), jsonChildNodeShippingAddress.getString("last_name"));
-
-                items.add(
-                        new Customer(
-                                jsonChildNode.optInt("id"),
-                                jsonChildNode.optString("email"),
-                                jsonChildNode.optString("first_name"),
-                                jsonChildNode.optString("last_name"),
-                                jsonChildNode.optString("username"),
-                                billingAddress,
-                                shippingAddress
-                        ));
+                items.add(new Products(id_product, name, type, price, ImageURL));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -228,133 +177,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
 
-        cAdapter = new CustomerAdapter(this, items);
-
-        list.setAdapter(cAdapter);
-    }
-
-    AdapterView.OnItemClickListener listenerOrdenes = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            //Toast.makeText(MainActivity.this, view.getTag() + "", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(MainActivity.this, CustomerOrdersActivity.class);
-            intent.putExtra("id_customer", view.getTag().toString());
-            startActivity(intent);
-        }
-    };
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btnAceptar:
-                validaAcceso();
-                break;
-            case R.id.btnCancelar:
-                break;
-        }
-    }
-
-    private void validaAcceso () {
-        String username = txtUsername.getText().toString();
-        String password = txtPassword.getText().toString();
-        Toast.makeText(MainActivity.this, username, Toast.LENGTH_SHORT).show();
-        Toast.makeText(MainActivity.this, password, Toast.LENGTH_SHORT).show();
-        Toast.makeText(MainActivity.this, loginResult, Toast.LENGTH_SHORT).show();
-        LoginTask tarea = new LoginTask(MainActivity.this);
-        tarea.setUsername(username);
-        tarea.setPassword(password);
-        try {
-            loginResult = tarea.execute(new String[] { auth_url }).get();
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-            System.out.println("Error..." + e.getMessage());
-        } catch (ExecutionException e) {
-            //e.printStackTrace();
-            System.out.println("Error..." + e.getMessage());
-        }
-
-
-
-
-        try {
-            JSONObject jso = new JSONObject(loginResult);
-            JSONArray jsonMainNode = jso.optJSONArray("auth");
-
-            for (int i = 0; i < jsonMainNode.length(); i++) {
-
-                JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
-                Boolean valido = jsonChildNode.optBoolean("valido");
-                String rol=jsonChildNode.getString("rol");
-                //&& rol.equals("administrator")
-                if (valido == true) {
-                    dLogin.dismiss();
-                    loadCustomers();
-                } else {
-                    Toast.makeText(this, "" +
-                                    "Usuario y/o contrase;a no validos",
-                            Toast.LENGTH_LONG).show();
-                }
-
-            }
-        } catch (JSONException e) {
-            //e.printStackTrace();
-            System.out.println("Errors:" + e.getMessage());
-        }
-
-
-    }
-
-    private void deleteCustomer(final int idCustomer) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Eliminar");
-        builder.setMessage("¿Deseas eliminar el registro seleccionado?");
-        builder.setPositiveButton("SI", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                WooCommerceTask tarea = new WooCommerceTask(MainActivity.this, WooCommerceTask.DELETE_TASK, "Eliminando Cliente", new AsyncResponse() {
-                    @Override
-                    public void setResponse(String output) {
-                        jsonResult = output;
-                        Toast.makeText(MainActivity.this, "Cliente eliminado correctamente.", Toast.LENGTH_SHORT).show();
-                        onRestart();
-                    }
-                });
-                tarea.execute(new String[] { MainActivity.url + "/" + idCustomer });
-
-            }
-        });
-        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-
-        Dialog d = builder.create();
-        d.show();
-
-
-    }
-
-    private void editCustomer(int idCustomer) {
-        Intent i = new Intent(this, EditCustomerActivity.class);
-        i.putExtra("idCustomer", idCustomer);
-        startActivity(i);
-
-    }
-
-    private void newCustomer() {
-        Intent i = new Intent(this, NewCustomerActivity.class);
-        startActivity(i);
-    }
-
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        list.setAdapter(null);
-        cAdapter.customers.clear();
-        //cAdapter.notifyDataSetChanged();
-        loadCustomers();
+        listProducts.setAdapter(new ProductsAdapter(this, items));
     }
 }

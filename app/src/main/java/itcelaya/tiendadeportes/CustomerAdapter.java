@@ -55,11 +55,28 @@ public class CustomerAdapter extends BaseAdapter {
 
         TextView tvNombre   = (TextView) rowView.findViewById(R.id.tvNombre);
         TextView tvEmail  = (TextView) rowView.findViewById(R.id.tvEmail);
+        //  TextView tvEmail  = (TextView) rowView.findViewById(R.id.tvE);
+        TextView tvCompañia  = (TextView) rowView.findViewById(R.id.tvCompañia);
+        TextView tvTelefono  = (TextView) rowView.findViewById(R.id.tvTelefonocus);
+        TextView tvPais  = (TextView) rowView.findViewById(R.id.tvPaisCus);
+        TextView tvCalle  = (TextView) rowView.findViewById(R.id.tvCalleCus);
+        TextView tvCiudad  = (TextView) rowView.findViewById(R.id.tvCiudadCus);
+        TextView tvEstado  = (TextView) rowView.findViewById(R.id.tvEstadoCus);
+        TextView tvCP  = (TextView) rowView.findViewById(R.id.tvCPCus);
         img1 = (ImageView) rowView.findViewById(R.id.avatarCustomer);
 
         final Customer item = this.customers.get(position);
         tvNombre.setText(item.getFirst_name() + " " + item.getLast_name() );
         tvEmail.setText(item.getEmail());
+        tvCompañia.setText(item.getBilling_address().getCompany());
+        tvTelefono.setText(item.getBilling_address().getPhone()+"");
+        tvPais.setText(item.getBilling_address().getCountry());
+        tvCalle.setText(item.getBilling_address().getAddress_1());
+        tvCiudad.setText(item.getBilling_address().getCity());
+        tvEstado.setText(item.getBilling_address().getState());
+        tvCP.setText(item.getBilling_address().getPostcode()+"");
+
+
         rowView.setTag(item.getId());
         //String sUrl = item.getImageUrl();
 

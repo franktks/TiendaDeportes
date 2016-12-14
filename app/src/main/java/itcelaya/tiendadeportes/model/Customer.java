@@ -10,9 +10,9 @@ public class Customer {
     String last_name;
     String username;
     Address billing_address;
-    Address shipping_address;
+    Address1 shipping_address;
 
-    public Customer(int id, String email, String first_name,String last_name,String username,Address billing_address, Address shipping_address)
+    public Customer(int id, String email, String first_name,String last_name,String username,Address billing_address, Address1 shipping_address)
     {
 
         this.id               = id;
@@ -35,11 +35,11 @@ public class Customer {
         this.billing_address = billing_address;
     }
 
-    public Address getShipping_address() {
+    public Address1 getShipping_address() {
         return shipping_address;
     }
 
-    public void setShipping_address(Address shipping_address) {
+    public void setShipping_address(Address1 shipping_address) {
         this.shipping_address = shipping_address;
     }
 

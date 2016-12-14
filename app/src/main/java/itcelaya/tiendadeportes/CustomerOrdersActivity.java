@@ -3,6 +3,8 @@ package itcelaya.tiendadeportes;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.text.Html;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -13,23 +15,24 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import itcelaya.tiendadeportes.model.Order;
 import itcelaya.tiendadeportes.model.Product;
+import itcelaya.tiendadeportes.model.Orders;
 import itcelaya.tiendadeportes.task.AsyncResponse;
 import itcelaya.tiendadeportes.task.WooCommerceTask;
 import itcelaya.tiendadeportes.utils.NukeSSLCerts;
+
 
 public class CustomerOrdersActivity extends ListActivity {
 
     ListView listOrders;
     public static String url = "https://192.168.1.72/store_itc/wc-api/v3/customers";
     String jsonResult;
-    List<Order> items   = new ArrayList<Order>();
+    List<Orders> items   = new ArrayList<Orders>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_customer_orders);
+        setContentView(R.layout.activity_customer_orders);
         listOrders = getListView();
         Intent i = getIntent();
         String idCustomer = i.getStringExtra("id_customer");
@@ -79,14 +82,14 @@ public class CustomerOrdersActivity extends ListActivity {
                     ));
                 }
 
-                items.add(
-                        new Order(
+              /*  items.add(
+                        new Orders(
                                 jsonChildNode.optInt("id"),
                                 jsonChildNode.optInt("order_number"),
                                 jsonChildNode.optString("status"),
                                 jsonChildNode.optDouble("total"),
                                 products
-                        ));
+                        ));*/
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -95,7 +98,7 @@ public class CustomerOrdersActivity extends ListActivity {
 
         }
 
-        listOrders.setAdapter(new OrderAdapter(this, items));
+       // listOrders.setAdapter(new OrderAdapter(this, items));
     }
 
 }

@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.text.Html;
 import android.widget.ProgressBar;
 
+import itcelaya.tiendadeportes.model.Products;
+
 public class SpashScreen extends AppCompatActivity {
     ProgressBar pro;
     @Override
@@ -50,7 +52,9 @@ public class SpashScreen extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            String user="invi";
             Intent intencion = new Intent(SpashScreen.this, MainActivity.class);
+            intencion.putExtra("user",user);
             startActivity(intencion);
         }
     }

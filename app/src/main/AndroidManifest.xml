@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="itcelaya.tiendadeportes">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -27,7 +28,20 @@
         <activity android:name=".OrdersActivity" />
         <activity android:name=".CategoriasActivity" />
         <activity android:name=".ProductosActivity" />
-        <activity android:name=".ClientesActivity"></activity>
+        <activity android:name=".EditCustomerActivity" />
+        <activity android:name=".NewCustomerActivity" />
+        <activity android:name=".ClientesActivity" />
+        <activity android:name=".Cupones" />
+        <activity android:name=".DetallesActivity" />
+        <activity android:name=".EditCategoryActivity" />
+        <activity android:name=".newCategoryActivity" />
+        <activity android:name=".FechaFActivity" />
+        <activity android:name=".FechaIActivity" />
+        <activity android:name=".Reporte2Activity" />
+        <activity android:name=".Grafica1Activity" />
+        <activity android:name=".GraficaPActivity" />
+        <activity android:name=".EditProductActivity" />
+        <activity android:name=".NewProductActivity"></activity>
     </application>
 
 </manifest>

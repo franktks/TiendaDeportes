@@ -14,12 +14,14 @@
         android:id="@+id/txtlogUsername"
         android:hint="Username"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        />
 
     <EditText
         android:id="@+id/txtlogPassword"
         android:hint="Password"
         android:layout_width="match_parent"
+        android:inputType="textPassword"
         android:layout_height="wrap_content" />
 
     <LinearLayout

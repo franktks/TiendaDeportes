@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_alta_cupon"
     android:layout_width="match_parent"
@@ -7,7 +7,60 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
+    android:orientation="vertical"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="itcelaya.tiendadeportes.AltaCuponActivity">
 
-</RelativeLayout>
+
+        <EditText
+            android:id="@+id/etnumorder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Codigo"
+            />
+
+        <EditText
+            android:id="@+id/etdescripcion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Descripcion"
+            />
+
+        <EditText
+            android:id="@+id/etmonto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:hint="Monto"
+            />
+
+        <EditText
+            android:id="@+id/etlimite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Numero limite de articulos"
+            android:inputType="number"
+            />
+        <EditText
+            android:id="@+id/etmontominimo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Minimo del monto"
+            android:inputType="number"
+            />
+        <EditText
+            android:id="@+id/etmontomaximo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="Maximo del monto"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/agregarcupon"
+            android:text="Agregar"
+            />
+
+</LinearLayout >

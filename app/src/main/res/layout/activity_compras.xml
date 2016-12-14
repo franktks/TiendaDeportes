@@ -9,5 +9,37 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="itcelaya.tiendadeportes.ComprasActivity">
+    <Button
+        android:id="@+id/btncheckout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CheckOut"/>
+    <LinearLayout
+        android:layout_below="@+id/btncheckout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/id"
+        >
+        <EditText
+            android:id="@+id/EdtCupones"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Ingresa el cupon"/>
+        <Button
+            android:id="@+id/btnCuponV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Verificaar"/>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listCompras"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/id" />
 
 </RelativeLayout>

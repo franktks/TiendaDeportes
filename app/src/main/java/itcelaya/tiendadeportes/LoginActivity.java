@@ -2,8 +2,10 @@ package itcelaya.tiendadeportes;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,13 +27,10 @@ import itcelaya.tiendadeportes.task.LoginTask;
 import itcelaya.tiendadeportes.utils.NukeSSLCerts;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
-
-    public static String consumer_key    = "ck_a65d32cc7da4f54f71287a832336426a52161e50";
-    public static String consumer_secret = "cs_cd1286641771420e8e1caf698da797f7ae8bb19b";
-    //public static String url = "https://192.168.56.1/~niluxer/wordpress/wc-api/v3/customers";
-    public static String url = "https://192.168.1.75/store_itc/wc-api/v3/customers";
-    //String auth_url = "https://192.168.56.1/~niluxer/wordpress/auth_users.php";
-    String auth_url = "https://192.168.1.75/store_itc/auth_users.php";
+    public static String consumer_key ="ck_9504739e63fdbdefa492559699298c92b10237ed";
+    public static String consumer_secret = "cs_b374d814c0b933e991812a107fe184de7fd94db3";
+    public static String url = "https://192.168.0.23/DeportesITC/wc-api/v3/customers";
+    String auth_url = "https://192.168.0.23/DeportesITC/auth_users.php";
     String loginResult;
 
     Dialog dLogin;
@@ -44,6 +43,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ActionBar actionBar= getSupportActionBar();
+     //   actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(Html.fromHtml("<font color='#fffcfc'>Login</font>"));
         NukeSSLCerts.nuke();
 
 
@@ -92,13 +94,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             for (int i = 0; i < jsonMainNode.length(); i++) {
 
                 JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
+                String id_Customer= jsonChildNode.optString("id");
                 Boolean valido = jsonChildNode.optBoolean("valido");
                 String rol=jsonChildNode.getString("rol");
-                Toast.makeText(this, rol, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, id_Customer, Toast.LENGTH_SHORT).show();
                 //
                 if (valido == true && rol.equals("customer")) {
 //                    dLogin.dismiss();
-                    Intent intent = new Intent(this, ClientesActivity.class);
+                    Intent intent = new Intent(this, ClienteActivity.class);
+                    intent.putExtra("id_customer",id_Customer);
                     startActivity(intent);
                    // loadCustomers();
                 }
